@@ -1,18 +1,14 @@
-from base_dao import BaseDAO
+from conection import SessionLocal
 from models import Boleto
 
-class BoletoDAO(BaseDAO):
+class BoletoDAO:
+
     @staticmethod
     def get_all():
         try:
-            query = "SELECT * FROM Boleto"
-            results = BaseDAO.execute_query(query, fetch=True)
-            return [Boleto(**{
-                'id': row['Id'],
-                'id_rifa': row['IdRifa'],
-                'id_usuario': row['IdUsuario'],
-                'numero_asignado': row['NumeroAsignado']
-            }) for row in results] if results else []
+            with SessionLocal() as session:
+                boletos = session.query(Boleto).all()
+                return boletos
         except Exception as e:
             print(f"Error obteniendo los boletos: {e}")
             return []
@@ -20,38 +16,47 @@ class BoletoDAO(BaseDAO):
     @staticmethod
     def insert(boleto):
         try:
-            query = "INSERT INTO Boleto (NumeroAsignado, IdUsuario, IdRifa) VALUES (%s, %s, %s)"
-            values = (boleto.numero_asignado, boleto.id_usuario, boleto.id_rifa)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
+            with SessionLocal() as session:
+                session.add(boleto)
+                session.commit()
                 print("Boleto agregado correctamente.")
-            return rows
+                return 1
         except Exception as e:
-            print(f"Error insertando el boleto: {e}")
+            print(f"Error insertando boleto: {e}")
             return 0
 
     @staticmethod
     def update(boleto):
         try:
-            query = "UPDATE Boleto SET NumeroAsignado=%s, IdUsuario=%s, IdRifa=%s WHERE Id=%s"
-            values = (boleto.numero_asignado, boleto.id_usuario, boleto.id_rifa, boleto.id)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("Boleto actualizado correctamente.")
-            return rows
+            with SessionLocal() as session:
+                boleto_existente = session.query(Boleto).filter_by(id=boleto.id).first()
+                if boleto_existente:
+                    boleto_existente.id_rifa = boleto.id_rifa
+                    boleto_existente.id_usuario = boleto.id_usuario
+                    boleto_existente.numero_asignado = boleto.numero_asignado
+                    session.commit()
+                    print("Boleto actualizado correctamente.")
+                    return 1
+                else:
+                    print("Boleto no encontrado.")
+                    return 0
         except Exception as e:
-            print(f"Error actualizando el boleto: {e}")
+            print(f"Error actualizando boleto: {e}")
             return 0
 
     @staticmethod
     def delete(boleto_id):
         try:
-            query = "DELETE FROM Boleto WHERE Id=%s"
-            values = (boleto_id,)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("Boleto eliminado correctamente.")
-            return rows
+            with SessionLocal() as session:
+                boleto = session.query(Boleto).filter_by(id=boleto_id).first()
+                if boleto:
+                    session.delete(boleto)
+                    session.commit()
+                    print("Boleto eliminado correctamente.")
+                    return 1
+                else:
+                    print("Boleto no encontrado.")
+                    return 0
         except Exception as e:
-            print(f"Error eliminando el boleto: {e}")
+            print(f"Error eliminando boleto: {e}")
             return 0

@@ -1,5 +1,5 @@
-from backDesarrolloWeb2.conection import SessionLocal
-from backDesarrolloWeb2.models import Rifa
+from conection import SessionLocal
+from models import Rifa
 
 class RifaDAO:
     

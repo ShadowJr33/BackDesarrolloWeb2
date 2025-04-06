@@ -1,77 +1,62 @@
-from base_dao import BaseDAO
+from conection import SessionLocal
 from models import ParticipacionApuesta
 
-class ParticipacionApuestaDAO(BaseDAO):
-    
+class ParticipacionApuestaDAO:
+
     @staticmethod
     def get_all():
-        """ Obtiene todas las participaciones en apuestas de la base de datos """
         try:
-            query = "SELECT * FROM participacionapuesta"
-            results = BaseDAO.execute_query(query, fetch=True)
-            
-            return [ParticipacionApuesta(**{
-                'id': row['Id'],
-                'id_apuesta': row['IdApuesta'],
-                'id_usuario': row['IdUsuario'],
-                'valor_apostado': row['ValorApostado']
-            }) for row in results] if results else []
-        
+            with SessionLocal() as session:
+                participaciones_apuestas = session.query(ParticipacionApuesta).all()
+                return participaciones_apuestas
         except Exception as e:
-            print(f"Error obteniendo las participaciones en apuestas: {e}")
+            print(f"Error obteniendo los participaciones de apuestas: {e}")
             return []
-    
+
     @staticmethod
-    def insert(participacion):
-        """ Inserta una nueva participación en una apuesta """
+    def insert(participacion_apuesta):
         try:
-            query = """
-                INSERT INTO participacionapuesta (IdApuesta, IdUsuario, ValorApostado) 
-                VALUES (%s, %s, %s)
-            """
-            values = (participacion.id_apuesta, participacion.id_usuario, participacion.valor_apostado)
-            rows = BaseDAO.execute_query(query, values)
-            
-            if rows > 0:
-                print("Participación en apuesta agregada correctamente.")
-            return rows
-        
+            with SessionLocal() as session:
+                session.add(participacion_apuesta)
+                session.commit()
+                print("ParticipacionApuesta agregado correctamente.")
+                return 1
         except Exception as e:
-            print(f"Error insertando la participación en la apuesta: {e}")
+            print(f"Error insertando participacion de apuesta: {e}")
             return 0
-    
+
     @staticmethod
-    def update(participacion):
-        """ Actualiza una participación en una apuesta existente """
+    def update(participacion_apuesta):
         try:
-            query = """
-                UPDATE participacionapuesta 
-                SET IdApuesta=%s, IdUsuario=%s, ValorApostado=%s 
-                WHERE Id=%s
-            """
-            values = (participacion.id_apuesta, participacion.id_usuario, participacion.valor_apostado, participacion.id)
-            rows = BaseDAO.execute_query(query, values)
-            
-            if rows > 0:
-                print("Participación en apuesta actualizada correctamente.")
-            return rows
-        
+            with SessionLocal() as session:
+                participacion_apuesta_existente = session.query(ParticipacionApuesta).filter_by(id=participacion_apuesta.id).first()
+                if participacion_apuesta_existente:
+                    participacion_apuesta_existente.id_apuesta = participacion_apuesta.id_apuesta
+                    participacion_apuesta_existente.id_usuario = participacion_apuesta.id_usuario
+                    participacion_apuesta_existente.valor_apostado = participacion_apuesta.valor_apostado
+                    session.commit()
+                    print("Participacion de apuesta actualizada correctamente.")
+                    return 1
+                else:
+                    print("Participacion de apuesta no encontrada.")
+                    return 0
         except Exception as e:
-            print(f"Error actualizando la participación en la apuesta: {e}")
+            print(f"Error actualizando participacion de apuesta: {e}")
             return 0
-    
+
     @staticmethod
-    def delete(participacion_id):
-        """ Elimina una participación en una apuesta por su ID """
+    def delete(user_id):
         try:
-            query = "DELETE FROM participacionapuesta WHERE Id=%s"
-            values = (participacion_id,)
-            rows = BaseDAO.execute_query(query, values)
-            
-            if rows > 0:
-                print("Participación en apuesta eliminada correctamente.")
-            return rows
-        
+            with SessionLocal() as session:
+                participacion_apuesta = session.query(ParticipacionApuesta).filter_by(id=user_id).first()
+                if participacion_apuesta:
+                    session.delete(participacion_apuesta)
+                    session.commit()
+                    print("Participacion de apuesta eliminada correctamente.")
+                    return 1
+                else:
+                    print("Participacion de apuesta no encontrada.")
+                    return 0
         except Exception as e:
-            print(f"Error eliminando la participación en la apuesta: {e}")
+            print(f"Error eliminanda participacion de apuesta: {e}")
             return 0

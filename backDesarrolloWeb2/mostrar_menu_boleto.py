@@ -18,21 +18,23 @@ def mostrar_menu_boleto():
                 print(boleto)
 
         elif opcion == "2":
-            id_rifa = input("ID de la rifa: ")
-            id_usuario = input("ID del usuario: ")
+            idRifa = input("ID de la rifa: ")
+            idUsuario = input("ID del usuario: ")
             numero_asignado = input("Número asignado: ")
             
-            nuevo_boleto = Boleto(id_rifa=id_rifa, id_usuario=id_usuario, numero_asignado=numero_asignado)
-            BoletoDAO.insert(nuevo_boleto)
-            print("🎉 Boleto agregado exitosamente.")
+            nuevo_boleto = Boleto(id_rifa=idRifa, id_usuario=idUsuario, numero_asignado=numero_asignado)
+            if BoletoDAO.insert(nuevo_boleto):
+                print("🎉 Boleto agregado exitosamente.")
+            else:
+                print("Intenta corregir los campos del boleto.")
 
         elif opcion == "3":
             id_boleto = input("ID del boleto a actualizar: ")
-            id_rifa = input("Nuevo ID de la rifa: ")
-            id_usuario = input("Nuevo ID del usuario: ")
+            idRifa = input("Nuevo ID de la rifa: ")
+            idUsuario = input("Nuevo ID del usuario: ")
             numero_asignado = input("Nuevo número asignado: ")
             
-            boleto_actualizado = Boleto(id=id_boleto, id_rifa=id_rifa, id_usuario=id_usuario, numero_asignado=numero_asignado)
+            boleto_actualizado = Boleto(id=id_boleto, id_rifa=idRifa, id_usuario=idUsuario, numero_asignado=numero_asignado)
             BoletoDAO.update(boleto_actualizado)
             print("✅ Boleto actualizado exitosamente.")
 

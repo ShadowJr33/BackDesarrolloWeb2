@@ -1,5 +1,5 @@
-from backDesarrolloWeb2.conection import SessionLocal
-from backDesarrolloWeb2.models import Usuario
+from conection import SessionLocal
+from models import Usuario
 
 class UsuarioDAO:
 

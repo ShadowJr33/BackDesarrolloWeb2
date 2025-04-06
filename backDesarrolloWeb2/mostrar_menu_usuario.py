@@ -1,5 +1,5 @@
-from backDesarrolloWeb2.llamadosDaos.usuario_dao import UsuarioDAO
-from backDesarrolloWeb2.models import Usuario
+from usuario_dao import UsuarioDAO
+from models import Usuario
 
 def mostrar_menu_usuario():
     while True:

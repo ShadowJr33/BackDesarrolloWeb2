@@ -1,4 +1,4 @@
-from backDesarrolloWeb2.conection import Connection
+from conection import Connection
 
 class BaseDAO:
     

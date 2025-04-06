@@ -2,10 +2,10 @@ from mostrar_menu_apuesta import mostrar_menu_apuesta
 from mostrar_menu_boleto import mostrar_menu_boleto
 from mostrar_menu_pago_premio import mostrar_menu_pago_premio
 from mostrar_menu_participacion import mostrar_menu_participacion_apuesta
-from backDesarrolloWeb2.menus.mostrar_menu_rifa import mostrar_menu_rifa
+from mostrar_menu_rifa import mostrar_menu_rifa
 from mostrar_menu_sorteo import mostrar_menu_sorteo
 from mostrar_menu_transaccion import mostrar_menu_transaccion
-from backDesarrolloWeb2.menus.mostrar_menu_usuario import mostrar_menu_usuario
+from mostrar_menu_usuario import mostrar_menu_usuario
 
 def mostrar_menu_principal():
     while True:

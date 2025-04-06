@@ -1,63 +1,60 @@
-from base_dao import BaseDAO
+from conection import SessionLocal
 from models import Sorteo
 
-class SorteoDAO(BaseDAO):
-
+class SorteoDAO:
     @staticmethod
     def get_all():
-        """ Obtiene todos los sorteos de la base de datos """
         try:
-            query = "SELECT * FROM sorteo"
-            results = BaseDAO.execute_query(query, fetch=True)
-
-            return [Sorteo(**{
-                'id': row['Id'],  # Usa 'Id' si MySQL lo devuelve con mayúscula
-                'id_rifa': row['IdRifa'],
-                'numero_ganador': row['NumeroGanador']
-            }) for row in results] if results else []
-
+            with SessionLocal() as session:
+                sorteos = session.query(Sorteo).all()
+                return sorteos
         except Exception as e:
             print(f"Error obteniendo los sorteos: {e}")
             return []
 
     @staticmethod
     def insert(sorteo):
-        """ Inserta un nuevo sorteo en la base de datos """
         try:
-            query = "INSERT INTO sorteo (IdRifa, NumeroGanador) VALUES (%s, %s)"
-            values = (sorteo.id_rifa, sorteo.numero_ganador)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("🎉 Sorteo agregado exitosamente.")
-            return rows
+            with SessionLocal() as session:
+                session.add(sorteo)
+                session.commit()
+                print("Sorteo agregado correctamente.")
+                return 1
         except Exception as e:
-            print(f"Error insertando el sorteo: {e}")
+            print(f"Error insertando sorteo: {e}")
             return 0
 
     @staticmethod
     def update(sorteo):
-        """ Actualiza un sorteo existente en la base de datos """
         try:
-            query = "UPDATE sorteo SET IdRifa=%s, NumeroGanador=%s WHERE Id=%s"
-            values = (sorteo.id_rifa, sorteo.numero_ganador, sorteo.id)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("🔄 Sorteo actualizado exitosamente.")
-            return rows
+            with SessionLocal() as session:
+                sorteo_existente = session.query(Sorteo).filter_by(id=sorteo.id).first()
+                if sorteo_existente:
+                    sorteo_existente.id_rifa = sorteo.id_rifa
+                    sorteo_existente.numero_ganador = sorteo.numero_ganador
+                    session.commit()
+                    print("Sorteo actualizado correctamente.")
+                    return 1
+                else:
+                    print("Sorteo no encontrado.")
+                    return 0
         except Exception as e:
-            print(f"Error actualizando el sorteo: {e}")
+            print(f"Error actualizando sorteo: {e}")
             return 0
 
     @staticmethod
     def delete(sorteo_id):
-        """ Elimina un sorteo de la base de datos por su ID """
         try:
-            query = "DELETE FROM sorteo WHERE Id=%s"
-            values = (sorteo_id,)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("❌ Sorteo eliminado exitosamente.")
-            return rows
+            with SessionLocal() as session:
+                sorteo = session.query(Sorteo).filter_by(id=sorteo_id).first()
+                if sorteo:
+                    session.delete(sorteo)
+                    session.commit()
+                    print("Sorteo eliminado correctamente.")
+                    return 1
+                else:
+                    print("Sorteo no encontrado.")
+                    return 0
         except Exception as e:
-            print(f"Error eliminando el sorteo: {e}")
+            print(f"Error eliminando sorteo: {e}")
             return 0

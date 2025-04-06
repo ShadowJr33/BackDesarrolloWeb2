@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, Date
-from backDesarrolloWeb2.conection import Base
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Float, Date
+from conection import Base
 
 
 class Usuario(Base):
@@ -32,54 +32,60 @@ class Rifa(Base):
                 f'Premio Principal: {self.premio_principal}, Premios Secundarios: {self.premios_secundarios}')
 
 
-class Apuesta:
-    def __init__ (self, id=None, deporte=None, campeonato=None, fecha_partido=None, 
-                  marcador=None, valor_minimo_apuesta=None, valor_maximo_apuesta=None):
-        self.id = id
-        self.deporte = deporte
-        self.campeonato = campeonato
-        self.fecha_partido = fecha_partido
-        self.marcador = marcador
-        self.valor_minimo_apuesta = valor_minimo_apuesta
-        self.valor_maximo_apuesta = valor_maximo_apuesta
-    
+class Apuesta(Base):
+    __tablename__ = "apuesta"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    deporte = Column(String(50), nullable=False)
+    campeonato = Column(String(100), nullable=False)
+    fecha_partido = Column(DateTime, nullable=False, name="fechaPartido")
+    marcador = Column(String(20), nullable=True)
+    valor_minimo_apuesta = Column(Float, nullable=False, name="valorMinimoApuesta")
+    valor_maximo_apuesta = Column(Float, nullable=False, name="valorMaximoApuesta")
+
+
     def __str__(self):
         return (f'ID: {self.id}, Deporte: {self.deporte}, Campeonato: {self.campeonato}, '
                 f'Fecha Partido: {self.fecha_partido}, Marcador: {self.marcador}, '
-                f'Valor Minimo Apuesta: {self.valor_minimo_apuesta}, Valor Maximo Apuesta: {self.valor_maximo_apuesta}')
+                f'Valor Mínimo Apuesta: {self.valor_minimo_apuesta}, Valor Máximo Apuesta: {self.valor_maximo_apuesta}')
+
     
-class Boleto:
-    def __init__(self, id=None, id_rifa=None, id_usuario=None, numero_asignado=None):
-        self.id = id
-        self.id_rifa = id_rifa
-        self.id_usuario = id_usuario
-        self.numero_asignado = numero_asignado
+class Boleto(Base):
+    __tablename__ = "boleto"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_rifa = Column(ForeignKey("rifa.Id"), nullable=False, name="idRifa")
+    id_usuario = Column(ForeignKey("usuario.id"), nullable=False, name="idUsuario")
+    numero_asignado = Column(Integer, nullable=False, name="numeroAsignado")
 
     def __str__(self):
         return (f'ID: {self.id}, ID Rifa: {self.id_rifa}, '
                 f'ID Usuario: {self.id_usuario}, Número Asignado: {self.numero_asignado}')
 
 
-class ParticipacionApuesta:
-    def __init__(self, id=None, id_apuesta=None, id_usuario=None, valor_apostado=None):
-        self.id = id
-        self.id_apuesta = id_apuesta
-        self.id_usuario = id_usuario
-        self.valor_apostado = valor_apostado
+class ParticipacionApuesta(Base):
+    __tablename__ = "participacionApuesta"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_apuesta = Column(ForeignKey("apuesta.id"), nullable=False, name="idApuesta")
+    id_usuario = Column(ForeignKey("usuario.id"), nullable=False, name="idUsuario")
+    valor_apostado = Column(Float, nullable=False, name="valorApostado")
 
     def __str__(self):
         return (f'ID: {self.id}, ID Apuesta: {self.id_apuesta}, '
                 f'ID Usuario: {self.id_usuario}, Valor Apostado: {self.valor_apostado}')
 
 
-class Sorteo:
-    def __init__(self, id=None, id_rifa=None, numero_ganador=None):
-        self.id = id
-        self.id_rifa = id_rifa
-        self.numero_ganador = numero_ganador
+class Sorteo(Base):
+    __tablename__ = "sorteo"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_rifa = Column("idRifa", ForeignKey("rifa.Id"), nullable=False)
+    numero_ganador = Column("numeroGanador", Integer, nullable=False)
 
     def __str__(self):
         return (f'ID: {self.id}, ID Rifa: {self.id_rifa}, Número Ganador: {self.numero_ganador}')
+
 
 class PagoPremio:
     def __init__(self, id=None, idusuario=None, idrifa_apuesta=None, valorganado=None):

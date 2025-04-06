@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 # Cargar variables de entorno
 load_dotenv()
 
-DATABASE = "backDesarrolloWeb"
-USERNAME = "root"
-PASSWORD = "1034jsGG*"
-HOST = "localhost"
-PORT = 3306
+DATABASE = os.getenv("DATABASE", "backDesarrolloWeb")
+USERNAME = os.getenv("USERNAME", "root")
+PASSWORD = os.getenv("PASSWORD", "1034jsGG*")
+HOST = os.getenv("HOST", "localhost")
+PORT = os.getenv("PORT", 3306)
 
 # SQLAlchemy necesita esta URL en formato especial
 DATABASE_URL = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
@@ -29,5 +29,5 @@ if __name__ == "__main__":
         with engine.connect() as conn:
             print("✅ Conexión exitosa a la base de datos.")
     except Exception as e:
-        print(f"❌ Error al conectar: {e}")
+        print(f"❌ Error al conectar: {e.with_traceback}")
 

@@ -1,5 +1,5 @@
-from backDesarrolloWeb2.llamadosDaos.rifa_dao import RifaDAO
-from backDesarrolloWeb2.models import Rifa
+from rifa_dao import RifaDAO
+from models import Rifa
 from datetime import datetime
 
 def mostrar_menu_rifa():
