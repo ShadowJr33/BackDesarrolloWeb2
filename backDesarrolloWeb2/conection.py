@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE = os.getenv("DATABASE", "backDesarrolloWeb")
-USERNAME = os.getenv("USERNAME", "root")
-PASSWORD = os.getenv("PASSWORD", "1034jsGG*")
+USERNAME = "root"
+PASSWORD = os.getenv("PASSWORD")
 HOST = os.getenv("HOST", "localhost")
 PORT = os.getenv("PORT", 3306)
+print(f"Conectando a la base de datos {DATABASE} en {HOST}:{PORT} como {USERNAME}")
 
 # SQLAlchemy necesita esta URL en formato especial
 DATABASE_URL = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
