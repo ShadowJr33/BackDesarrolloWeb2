@@ -1,15 +1,13 @@
-from base_dao import BaseDAO
+from conection import SessionLocal
 from models import Transaccion
 
-class TransaccionDAO(BaseDAO):
-
+class TransaccionDAO:
     @staticmethod
     def get_all():
         try:
-            query = "SELECT * FROM Transaccion"
-            results = BaseDAO.execute_query(query, fetch=True)
-            print("Resultados de la consulta:")
-            return [Transaccion(**{k.lower(): v for k, v in row.items()}) for row in results] if results else []
+            with SessionLocal() as session:
+                transacciones = session.query(Transaccion).all()
+                return transacciones
         except Exception as e:
             print(f"Error obteniendo las transacciones: {e}")
             return []
@@ -17,38 +15,48 @@ class TransaccionDAO(BaseDAO):
     @staticmethod
     def insert(transaccion):
         try:
-            query = "INSERT INTO Transaccion (IdUsuario, Tipo, Monto) VALUES (%s, %s, %s)"
-            values = (transaccion.idusuario, transaccion.tipo, transaccion.monto)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
+            with SessionLocal() as session:
+                session.add(transaccion)
+                session.commit()
                 print("Transacción agregada correctamente.")
-            return rows
+                return 1
         except Exception as e:
-            print(f"Error insertando la transacción: {e}")
+            print(f"Error insertando transacción: {e}")
             return 0
 
     @staticmethod
     def update(transaccion):
         try:
-            query = "UPDATE Transaccion SET IdUsuario=%s, Tipo=%s, Monto=%s WHERE Id=%s"
-            values = (transaccion.idusuario, transaccion.tipo, transaccion.monto, transaccion.id)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("Transacción actualizada correctamente.")
-            return rows
+            with SessionLocal() as session:
+                transaccion_existente = session.query(Transaccion).filter_by(id=transaccion.id).first()
+                if transaccion_existente:
+                    transaccion_existente.id_usuario = transaccion.id_usuario
+                    transaccion_existente.tipo = transaccion.tipo
+                    transaccion_existente.monto = transaccion.monto
+                    transaccion_existente.fecha = transaccion.fecha
+                    session.commit()
+                    print("Transacción actualizada correctamente.")
+                    return 1
+                else:
+                    print("Transacción no encontrada.")
+                    return 0
         except Exception as e:
-            print(f"Error actualizando la transacción: {e}")
+            print(f"Error actualizando transacción: {e}")
             return 0
 
     @staticmethod
     def delete(transaccion_id):
         try:
-            query = "DELETE FROM Transaccion WHERE Id=%s"
-            values = (transaccion_id,)
-            rows = BaseDAO.execute_query(query, values)
-            if rows > 0:
-                print("Transacción eliminada correctamente.")
-            return rows
+            with SessionLocal() as session:
+                transaccion = session.query(Transaccion).filter_by(id=transaccion_id).first()
+                if transaccion:
+                    session.delete(transaccion)
+                    session.commit()
+                    print("Transacción eliminada correctamente.")
+                    return 1
+                else:
+                    print("Transacción no encontrada.")
+                    return 0
         except Exception as e:
-            print(f"Error eliminando la transacción: {e}")
+            print(f"Error eliminando transacción: {e}")
             return 0

@@ -1,7 +1,6 @@
 from pago_premio_dao import PagoPremioDAO
 from models import PagoPremio
 
-
 def mostrar_menu_pago_premio():
     while True:
         print("\nMenú de Gestión de Pagos de Premio")
@@ -19,32 +18,34 @@ def mostrar_menu_pago_premio():
                 print(pago)
 
         elif opcion == "2":
-            id_usuario = int(input("ID del usuario: "))
-            id_rifa_apuesta = int(input("ID de la rifa/apuesta: "))
+            id_usuario = input("ID del usuario: ")
+            id_rifa_apuesta = input("ID de la rifa/apuesta: ")
             valor_ganado = float(input("Valor ganado: "))
-            nuevo_pago = PagoPremio(idusuario=id_usuario, idrifa_apuesta=id_rifa_apuesta, valorganado=valor_ganado)
+
+            nuevo_pago = PagoPremio(id_usuario=id_usuario, id_rifa_apuesta=id_rifa_apuesta, valor_ganado=valor_ganado)
             PagoPremioDAO.insert(nuevo_pago)
-            print("Pago de premio agregado.")
+            print("🎉 ¡Pago de premio agregado exitosamente!")
 
         elif opcion == "3":
-            id_pago = int(input("ID del pago a actualizar: "))
-            id_usuario = int(input("Nuevo ID de usuario: "))
-            id_rifa_apuesta = int(input("Nuevo ID de rifa/apuesta: "))
+            id_pago = input("ID del pago de premio a actualizar: ")
+            id_usuario = input("Nuevo ID del usuario: ")
+            id_rifa_apuesta = input("Nuevo ID de la rifa/apuesta: ")
             valor_ganado = float(input("Nuevo valor ganado: "))
-            pago_actualizado = PagoPremio(id=id_pago, idusuario=id_usuario, idrifa_apuesta=id_rifa_apuesta, valorganado=valor_ganado)
+
+            pago_actualizado = PagoPremio(id=id_pago, id_usuario=id_usuario, id_rifa_apuesta=id_rifa_apuesta, valor_ganado=valor_ganado)
             PagoPremioDAO.update(pago_actualizado)
-            print("Pago de premio actualizado.")
+            print("✅ Pago de premio actualizado exitosamente.")
 
         elif opcion == "4":
-            id_pago = int(input("ID del pago a eliminar: "))
+            id_pago = input("ID del pago de premio a eliminar: ")
             PagoPremioDAO.delete(id_pago)
-            print("Pago de premio eliminado.")
+            print("❌ Pago de premio eliminado exitosamente.")
 
         elif opcion == "5":
-            print("Saliendo...")
+            print("👋 Saliendo del sistema de pagos de premio...")
             break
         else:
-            print("Opción inválida. Inténtalo de nuevo.")
+            print("⚠️ Opción inválida. Inténtalo de nuevo.")
 
 if __name__ == "__main__":
     mostrar_menu_pago_premio()

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Float, Date
+from datetime import datetime
 from conection import Base
 
 
@@ -87,24 +88,28 @@ class Sorteo(Base):
         return (f'ID: {self.id}, ID Rifa: {self.id_rifa}, Número Ganador: {self.numero_ganador}')
 
 
-class PagoPremio:
-    def __init__(self, id=None, idusuario=None, idrifa_apuesta=None, valorganado=None):
-        self.id = id
-        self.idusuario = idusuario
-        self.idrifa_apuesta = idrifa_apuesta
-        self.valorganado = valorganado
+class PagoPremio(Base):
+    __tablename__ = "pagoPremio"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_usuario = Column("idUsuario", ForeignKey("usuario.id"), nullable=False)
+    id_rifa_apuesta = Column("idRifa_Apuesta", Integer, nullable=False)
+    valor_ganado = Column("valorGanado", Float, nullable=False)
 
     def __str__(self):
-        return (f'ID: {self.id}, Usuario ID: {self.idusuario}, Rifa/Apuesta ID: {self.idrifa_apuesta}, '
-                f'Valor Ganado: {self.valorganado}')
-class Transaccion:
-    def __init__(self, id=None, idusuario=None, tipo=None, monto=None, fecha=None):
-        self.id = id
-        self.idusuario = idusuario
-        self.tipo = tipo
-        self.monto = monto
-        self.fecha = fecha
+        return (f'ID: {self.id}, Usuario ID: {self.id_usuario}, '
+                f'Rifa/Apuesta ID: {self.id_rifa_apuesta}, Valor Ganado: {self.valor_ganado}')
+
+
+class Transaccion(Base):
+    __tablename__ = "transaccion"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_usuario = Column("idUsuario", ForeignKey("usuario.id"), nullable=False)
+    tipo = Column(String(10), nullable=False)  # ENUM no es soportado directamente por SQLite
+    monto = Column(Float, nullable=False)
+    fecha = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __str__(self):
-        return (f'ID: {self.id}, Usuario ID: {self.idusuario}, Tipo: {self.tipo}, '
+        return (f'ID: {self.id}, Usuario ID: {self.id_usuario}, Tipo: {self.tipo}, '
                 f'Monto: {self.monto}, Fecha: {self.fecha}')
