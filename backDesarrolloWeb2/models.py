@@ -165,10 +165,19 @@ class Transaccion(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column("idUsuario", ForeignKey("usuario.id"), nullable=False)
-    tipo = Column(String(10), nullable=False)  # ENUM no es soportado directamente por SQLite
+    tipo = Column(String(20), nullable=False)  # ENUM no es soportado directamente por SQLite
     monto = Column(Float, nullable=False)
     fecha = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __str__(self):
         return (f'ID: {self.id}, Usuario ID: {self.id_usuario}, Tipo: {self.tipo}, '
                 f'Monto: {self.monto}, Fecha: {self.fecha}')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_usuario": self.id_usuario,
+            "tipo": self.tipo,
+            "monto": self.monto,
+            "fecha": self.fecha
+        }

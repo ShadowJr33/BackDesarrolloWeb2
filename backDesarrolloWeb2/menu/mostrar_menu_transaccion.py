@@ -1,4 +1,4 @@
-from transaccion_dao import TransaccionDAO
+from backDesarrolloWeb2.routes.transaccion_routes import TransaccionDAO
 from models import Transaccion
 from datetime import datetime
 import pytz  # Importa pytz para manejar zonas horarias
