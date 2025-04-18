@@ -131,6 +131,13 @@ class Sorteo(Base):
 
     def __str__(self):
         return (f'ID: {self.id}, ID Rifa: {self.id_rifa}, Número Ganador: {self.numero_ganador}')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'id_rifa': self.id_rifa,
+            'numero_ganador': self.numero_ganador
+        }
 
 
 class PagoPremio(Base):

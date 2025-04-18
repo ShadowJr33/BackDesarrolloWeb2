@@ -1,4 +1,4 @@
-from sorteo_dao import SorteoDAO
+from backDesarrolloWeb2.routes.sorteo_dao import SorteoDAO
 from models import Sorteo
 
 def mostrar_menu_sorteo():
