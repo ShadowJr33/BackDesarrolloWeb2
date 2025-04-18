@@ -1,4 +1,4 @@
-from rifa_dao import RifaDAO
+from backDesarrolloWeb2.routes.rifa_dao import RifaDAO
 from models import Rifa
 from datetime import datetime
 

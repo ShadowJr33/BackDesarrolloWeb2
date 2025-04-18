@@ -1,4 +1,4 @@
-from conection import SessionLocal
+from backDesarrolloWeb2.connection import SessionLocal
 from models import Apuesta
 
 class ApuestaDAO:

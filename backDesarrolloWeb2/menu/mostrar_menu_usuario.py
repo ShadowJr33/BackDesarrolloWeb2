@@ -1,4 +1,4 @@
-from usuario_dao import UsuarioDAO
+from backDesarrolloWeb2.routes.usuario_routes import UsuarioDAO
 from models import Usuario
 
 def mostrar_menu_usuario():

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Float, Date
 from datetime import datetime
-from conection import Base
+from connection import Base
 
 
 class Usuario(Base):
@@ -14,6 +14,14 @@ class Usuario(Base):
 
     def __str__(self):
         return f'ID: {self.id}, Nombre: {self.nombre}, Correo: {self.correo}, Saldo: {self.saldo}'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'correo': self.correo,
+            'saldo': self.saldo
+        }
 
 class Rifa(Base):
     __tablename__ = "rifa"  # Usa el nombre exacto de la tabla (respeta la mayúscula)
@@ -31,7 +39,18 @@ class Rifa(Base):
         return (f'ID: {self.id}, Nombre: {self.nombre}, Participantes: {self.numero_maximo_participantes}, '
                 f'Valor: {self.valor}, Inicio: {self.fecha_inicio}, Fin: {self.fecha_fin}, '
                 f'Premio Principal: {self.premio_principal}, Premios Secundarios: {self.premios_secundarios}')
-
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'numero_maximo_participantes': self.numero_maximo_participantes,
+            'valor': self.valor,
+            'fecha_inicio': self.fecha_inicio,
+            'fecha_fin': self.fecha_fin,
+            'premio_principal': self.premio_principal,
+            'premios_secundarios': self.premios_secundarios
+        }
 
 class Apuesta(Base):
     __tablename__ = "apuesta"
@@ -62,7 +81,14 @@ class Boleto(Base):
     def __str__(self):
         return (f'ID: {self.id}, ID Rifa: {self.id_rifa}, '
                 f'ID Usuario: {self.id_usuario}, Número Asignado: {self.numero_asignado}')
-
+   
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'id_rifa': self.id_rifa,
+            'id_usuario': self.id_usuario,
+            'numero_asignado': self.numero_asignado
+        }
 
 class ParticipacionApuesta(Base):
     __tablename__ = "participacionApuesta"

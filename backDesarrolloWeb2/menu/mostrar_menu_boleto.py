@@ -1,4 +1,4 @@
-from boleto_dao import BoletoDAO
+from backDesarrolloWeb2.routes.boleto_routes import BoletoDAO
 from models import Boleto
 
 def mostrar_menu_boleto():
