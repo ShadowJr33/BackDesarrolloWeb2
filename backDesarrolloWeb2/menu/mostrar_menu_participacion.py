@@ -1,4 +1,4 @@
-from participacion_apuesta_dao import ParticipacionApuestaDAO
+from backDesarrolloWeb2.routes.participacion_apuesta_dao import ParticipacionApuestaDAO
 from models import ParticipacionApuesta
 
 def mostrar_menu_participacion_apuesta():

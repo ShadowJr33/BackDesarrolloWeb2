@@ -1,4 +1,4 @@
-from pago_premio_dao import PagoPremioDAO
+from backDesarrolloWeb2.routes.pago_premio_routes import PagoPremioDAO
 from models import PagoPremio
 
 def mostrar_menu_pago_premio():

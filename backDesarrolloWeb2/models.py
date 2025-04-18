@@ -68,6 +68,17 @@ class Apuesta(Base):
         return (f'ID: {self.id}, Deporte: {self.deporte}, Campeonato: {self.campeonato}, '
                 f'Fecha Partido: {self.fecha_partido}, Marcador: {self.marcador}, '
                 f'Valor Mínimo Apuesta: {self.valor_minimo_apuesta}, Valor Máximo Apuesta: {self.valor_maximo_apuesta}')
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'deporte': self.deporte,
+            'campeonato': self.campeonato,
+            'fecha_partido': self.fecha_partido,
+            'marcador': self.marcador,
+            'valor_minimo_apuesta': self.valor_minimo_apuesta,
+            'valor_maximo_apuesta': self.valor_maximo_apuesta
+        }
 
     
 class Boleto(Base):
@@ -101,6 +112,14 @@ class ParticipacionApuesta(Base):
     def __str__(self):
         return (f'ID: {self.id}, ID Apuesta: {self.id_apuesta}, '
                 f'ID Usuario: {self.id_usuario}, Valor Apostado: {self.valor_apostado}')
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'id_apuesta': self.id_apuesta,
+            'id_usuario': self.id_usuario,
+            'valor_apostado': self.valor_apostado
+        }
 
 
 class Sorteo(Base):
@@ -125,6 +144,13 @@ class PagoPremio(Base):
     def __str__(self):
         return (f'ID: {self.id}, Usuario ID: {self.id_usuario}, '
                 f'Rifa/Apuesta ID: {self.id_rifa_apuesta}, Valor Ganado: {self.valor_ganado}')
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_usuario": self.id_usuario,
+            "id_rifa_apuesta": self.id_rifa_apuesta,
+            "valor_ganado": self.valor_ganado            
+        }
 
 
 class Transaccion(Base):

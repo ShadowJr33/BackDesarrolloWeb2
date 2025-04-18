@@ -1,4 +1,4 @@
-from backDesarrolloWeb2.menu.apuesta_dao import ApuestaDAO
+from backDesarrolloWeb2.routes.apuesta_routes import ApuestaDAO
 from models import Apuesta
 from datetime import datetime
 
