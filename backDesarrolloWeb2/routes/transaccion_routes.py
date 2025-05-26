@@ -47,11 +47,12 @@ def create_transaccion():
         return jsonify({'message': f'Error: {str(e)}'}), 500
 
 
-@transaccion_bp.route('/actualizar/<int:id>', methods=['PUT'])
-def update_transaccion(id):
+@transaccion_bp.route('/actualizar', methods=['PUT'])
+def update_transaccion():
     '''
-    Ejemplo JSON para probar:
+    Ejemplo JSON:
     {
+      "id": 5,
       "id_usuario": 5,
       "tipo": "debito",
       "monto": 100.0,
@@ -60,18 +61,18 @@ def update_transaccion(id):
     '''
     try:
         data = request.get_json()
+        if not all(k in data for k in ('id', 'id_usuario', 'tipo', 'monto')):
+            return jsonify({'message': 'Faltan datos requeridos'}), 400
+
+        id = data.get('id')
         with SessionLocal() as session:
             trans = session.query(Transaccion).filter_by(id=id).first()
             if not trans:
                 return jsonify({'message': 'Transacción no encontrada'}), 404
 
-            # Solo actualizamos si viene en el JSON
-            if 'id_usuario' in data:
-                trans.id_usuario = data['id_usuario']
-            if 'tipo' in data:
-                trans.tipo = data['tipo']
-            if 'monto' in data:
-                trans.monto = data['monto']
+            trans.id_usuario = data['id_usuario']
+            trans.tipo = data['tipo']
+            trans.monto = data['monto']
             if 'fecha' in data:
                 trans.fecha = datetime.fromisoformat(data['fecha'])
 

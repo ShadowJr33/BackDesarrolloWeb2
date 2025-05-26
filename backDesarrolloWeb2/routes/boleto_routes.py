@@ -51,25 +51,23 @@ def create_boleto():
 @boleto_bp.route('/actualizar', methods=['PUT'])
 def update_boleto():
     try:
-        data = request.get_json() 
-        
-        # Validación de los datos
-        if not all(key in data for key in ('numero_asignado', 'id_rifa', 'id_usuario')):
-            return jsonify({'message': 'Faltan datos requeridos'}), 400  
+        data = request.get_json()
+        if not all(key in data for key in ('id', 'id_rifa', 'id_usuario', 'numero_asignado')):
+            return jsonify({'message': 'Faltan datos requeridos'}), 400
 
-        numero_asignado = data.get('numero_asignado')
-        
+        id = data.get('id')
         with SessionLocal() as session:
-            boleto = session.query(Boleto).filter_by(numero_asignado=numero_asignado).first()
+            boleto = session.query(Boleto).filter_by(id=id).first()
             if boleto:
                 boleto.id_rifa = data['id_rifa']
                 boleto.id_usuario = data['id_usuario']
+                boleto.numero_asignado = data['numero_asignado']
                 session.commit()
-                return jsonify({'message': 'Boleto actualizado exitosamente'}), 200 
-            return jsonify({'message': 'Boleto no encontrado'}), 404  
+                return jsonify({'message': 'Boleto actualizado exitosamente'}), 200
+            return jsonify({'message': 'Boleto no encontrado'}), 404
 
     except Exception as e:
-        return jsonify({'message': f'Error: {str(e)}'}), 500  
+        return jsonify({'message': f'Error: {str(e)}'}), 500
     '''
     {
     "id_rifa": 5,
@@ -81,13 +79,16 @@ def update_boleto():
 @boleto_bp.route('/eliminar', methods=['DELETE'])
 def delete_boleto():
     try:
-        data = request.get_json()  
-        numero_asignado = data.get('numero_asignado') 
+        data = request.get_json()
+        print("Payload recibido para eliminar:", data)  # <-- Agrega esto
+        id = data.get('id')
+        if id is None:
+            return jsonify({'message': 'Falta id'}), 400
         with SessionLocal() as session:
-            boleto = session.query(Boleto).filter_by(numero_asignado=numero_asignado).first()  
+            boleto = session.query(Boleto).filter_by(id=id).first()
             if boleto:
                 session.delete(boleto)
-                session.commit() 
+                session.commit()
                 return jsonify({'message': 'Boleto eliminado exitosamente'}), 200
             return jsonify({'message': 'Boleto no encontrado'}), 404
     except Exception as e:

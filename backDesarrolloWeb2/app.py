@@ -8,6 +8,8 @@ from routes.participacion_apuesta_dao import participacion_apuesta_bp
 from routes.sorteo_dao import sorteo_bp
 from routes.transaccion_routes import transaccion_bp
 app = Flask(__name__)
+from flask_cors import CORS
+CORS(app)
 
 
 app.register_blueprint(boleto_bp, url_prefix='/boleto')
